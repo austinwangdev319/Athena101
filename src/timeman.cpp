@@ -155,6 +155,32 @@ void TimeManagement::init(Search::LimitsType& limits,
         optScale *= 1 + 0.9 * std::min(timeAdvantage, 0.0);
     }
 
+    // Adapt search time to the actual clock situation. A short remaining clock
+    // must favor quick, safe decisions; a meaningful increment restores budget so
+    // the engine can invest more time without risking flagging.
+    const double remainingSeconds = double(scaledTime) / 1000.0;
+    const double incrementSeconds = double(limits.inc[us] / scaleFactor) / 1000.0;
+
+    double clockPace = 1.0;
+    if (remainingSeconds < 2.0)
+        clockPace = 0.35;
+    else if (remainingSeconds < 5.0)
+        clockPace = 0.45;
+    else if (remainingSeconds < 15.0)
+        clockPace = 0.55;
+    else if (remainingSeconds < 45.0)
+        clockPace = 0.65;
+    else if (remainingSeconds < 90.0)
+        clockPace = 0.72;
+    else if (remainingSeconds < 180.0)
+        clockPace = 0.80;
+    else if (remainingSeconds < 300.0)
+        clockPace = 0.88;
+
+    // Up to 30% more time for a healthy increment (e.g. 3+2 or 5+3).
+    const double incrementCredit = 1.0 + 0.30 * std::clamp(incrementSeconds / 2.0, 0.0, 1.0);
+    optScale *= clockPace * incrementCredit;
+
     // Limit the maximum possible time for this move
     optimumTime = TimePoint(std::max(1.0, optScale * timeLeft));
     maximumTime =
