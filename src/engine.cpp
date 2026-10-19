@@ -101,6 +101,9 @@ Engine::Engine(std::optional<std::filesystem::path> path) :
     options.add(  //
       "Ponder", Option(false));
 
+    // The UCI layer uses this option to return matching book moves immediately.
+    options.add("Use Opening Book", Option(true));
+
     options.add(  //
       "MultiPV", Option(1, 1, MAX_MOVES));
 
