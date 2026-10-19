@@ -311,7 +311,7 @@ constexpr OpeningBookLine OpeningBook[] = {
     // Nimzo-Indian Sämisch Variation
     {"d2d4 g8f6 c2c4 e7e6 b1c3 f8b4 a2a3 b4c3 b2c3 c7c5 f2f3", 5},
     // Nimzo-Indian Classical Variation
-    {"d2d4 g8f6 c2c4 e7e6 b1c3 f8b4 d1c2 e8g8 a2a3 b4c3 d1c3", 4},
+    {"d2d4 g8f6 c2c4 e7e6 b1c3 f8b4 d1c2 e8g8 a2a3 b4c3 c2c3", 4},
     // Colle System setup
     {"d2d4 d7d5 g1f3 g8f6 e2e3 e7e6 f1d3 c7c5 b2b3", 4},
     // Veresov Opening
