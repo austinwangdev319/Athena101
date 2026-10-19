@@ -148,8 +148,8 @@ std::optional<std::string> opening_book_move(const std::vector<std::string>& his
     }
 
     unsigned totalWeight = 0;
-    for (const auto& [move, weight] : candidates)
-        totalWeight += weight;
+    for (const auto& candidate : candidates)
+        totalWeight += candidate.second;
     if (!totalWeight)
         return std::nullopt;
 
