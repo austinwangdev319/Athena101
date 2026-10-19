@@ -22,6 +22,8 @@
 #include <cctype>
 #include <chrono>
 #include <cmath>
+#include <cstdint>
+#include <map>
 #include <cstdlib>
 #include <iterator>
 #include <optional>
@@ -48,6 +50,118 @@ using Time = std::chrono::steady_clock;
 using ms   = std::chrono::milliseconds;
 
 constexpr auto BenchmarkCommand = "speedtest";
+
+struct OpeningBookLine {
+    std::string_view moves;
+    unsigned         weight;
+};
+
+// Compact, weighted mainstream opening repertoire in UCI coordinate notation.
+// The book is consulted only from the standard initial position and only for
+// clock-managed games; fixed-depth/bench analysis always uses the search.
+constexpr OpeningBookLine OpeningBook[] = {
+    {"e2e4 e7e5 g1f3 b8c6 f1b5 a7a6 b5a4 g8f6 e1g1 f8e7", 12}, // Ruy Lopez
+    {"e2e4 e7e5 g1f3 b8c6 f1b5 g8f6 e1g1 f6e4", 5},          // Berlin
+    {"e2e4 e7e5 g1f3 b8c6 f1c4 f8c5 c2c3 g8f6 d2d4 e5d4 c3d4", 10}, // Italian
+    {"e2e4 e7e5 g1f3 b8c6 f1c4 g8f6 d2d3 f8c5 c2c3 d7d6", 7},
+    {"e2e4 e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 b1c3 f8b4", 9}, // Scotch
+    {"e2e4 e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 b1c3 d7d6", 5},
+    {"e2e4 e7e5 g1f3 g8f6 f3e5 d7d6 e5f3 f6e4", 6},          // Petrov
+    {"e2e4 e7e5 b1c3 g8f6 f2f4", 4},                         // Vienna
+    {"e2e4 e7e5 f2f4 e5f4 g1f3 g7g5 d2d4", 4},              // King's Gambit
+    {"e2e4 e7e5 g1f3 b8c6 f1c4 f8c5 c2c3 g8f6 d2d4 e5d4 c3d4 c5b4", 4},
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 a7a6", 12}, // Sicilian Najdorf
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 g7g6", 8}, // Sicilian Dragon setup
+    {"e2e4 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g8f6 b1c3 d7d6", 7}, // Classical Sicilian
+    {"e2e4 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g8f6 b1c3 e7e5", 7}, // Sveshnikov
+    {"e2e4 c7c5 b1c3 b8c6 g2g3 g7g6 f1g2 f8g7 d2d3 d7d6", 5}, // Closed Sicilian
+    {"e2e4 e7e6 d2d4 d7d5 e4e5 c7c5 c2c3 b8c6 g1f3", 9},    // French Advance
+    {"e2e4 e7e6 d2d4 d7d5 b1c3 f8b4 e4e5 c7c5", 6},        // French Winawer
+    {"e2e4 e7e6 d2d4 d7d5 e4d5 e6d5 b1c3 g8f6", 5},       // French Exchange
+    {"e2e4 c7c6 d2d4 d7d5 b1c3 d5e4 c3e4 c8f5 g1f3", 10}, // Caro-Kann
+    {"e2e4 c7c6 d2d4 d7d5 e4e5 c8f5", 5},                 // Caro-Kann Advance
+    {"e2e4 d7d6 d2d4 g8f6 b1c3 g7g6", 7},                 // Pirc
+    {"e2e4 g7g6 d2d4 f8g7 b1c3 d7d6", 6},                 // Modern
+    {"e2e4 g8f6 e4e5 f6d5 d2d4 d7d6 c2c4 d5b6", 6},      // Alekhine
+    {"e2e4 d7d5 e4d5 d8d5 b1c3 d5a5 d2d4 g8f6 g1f3", 7}, // Scandinavian
+    {"e2e4 b8c6 d2d4 d7d5 e4e5 c8f5", 5},                // Nimzowitsch Defence
+    {"d2d4 d7d5 c2c4 e7e6 b1c3 g8f6 g1f3 f8e7 e2e3 e8g8", 10}, // Queen's Gambit Declined
+    {"d2d4 d7d5 c2c4 c7c6 g1f3 g8f6 b1c3 d5c4", 8},     // Slav
+    {"d2d4 g8f6 c2c4 e7e6 b1c3 f8b4 e2e3 e8g8 f1d3 d7d5", 8}, // Nimzo-Indian
+    {"d2d4 g8f6 c2c4 e7e6 g1f3 b7b6 g2g3 c8b7 f1g2 f8e7 e1g1", 7}, // Queen's Indian
+    {"d2d4 g8f6 c2c4 g7g6 b1c3 f8g7 e2e4 d7d6 g1f3 e8g8 f1e2 e7e5", 10}, // King's Indian
+    {"d2d4 g8f6 c2c4 g7g6 b1c3 d7d5 c4d5 f6d5 e2e4 d5c3 b2c3 f8g7", 8}, // Grünfeld
+    {"d2d4 g8f6 c2c4 c7c5 d4d5 e7e6 b1c3 e6d5 c4d5 d7d6", 6}, // Benoni
+    {"d2d4 f7f5 c2c4 g8f6 g2g3 e7e6 f1g2 f8e7 g1f3 e8g8", 7}, // Dutch
+    {"d2d4 g8f6 g1f3 e7e6 c1f4 d7d5 e2e3 c7c5 c2c3 b8c6", 7}, // London
+    {"d2d4 g8f6 c2c4 e7e6 g2g3 d7d5 f1g2 f8e7 g1f3 e8g8", 7}, // Catalan
+    {"c2c4 e7e5 b1c3 g8f6 g2g3 d7d5 c4d5 f6d5", 9},      // English, reversed Sicilian
+    {"c2c4 c7c5 b1c3 b8c6 g2g3 g7g6 f1g2 f8g7 e2e3 e7e6", 7}, // English Symmetrical
+    {"g1f3 d7d5 c2c4 e7e6 g2g3 g8f6 f1g2 f8e7 e1g1 e8g8", 6}, // Réti
+    {"d2d4 d7d5 c2c4 e7e6 b1c3 g8f6 g1f3 f8e7 c1g5", 5}, // QGD, practical main line
+    {"d2d4 d7d5 c2c4 c7c6 b1c3 g8f6 g1f3 d5c4 e2e4", 5}, // Slav, Geller gambit
+    {"e2e4 c7c5 g1f3 e7e6 d2d4 c5d4 f3d4 a7a6", 7},     // Sicilian Kan/Taimanov setup
+    {"e2e4 c7c5 g1f3 e7e6 d2d4 c5d4 f3d4 b8c6", 6},
+    {"e2e4 e7e5 g1f3 b8c6 b1c3 g8f6 d2d4 e5d4 f3d4", 5}, // Four Knights
+    {"e2e4 e7e5 g1f3 b8c6 f1b5 a7a6 b5a4 g8f6 d2d3", 5},
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 a7a6 f1e2", 5},
+};
+
+std::optional<std::string> opening_book_move(const std::vector<std::string>& history) {
+    if (history.size() >= 18)
+        return std::nullopt;
+
+    std::map<std::string, unsigned> candidates;
+    std::uint64_t selector = 1469598103934665603ULL;
+    for (const auto& played : history)
+    {
+        for (unsigned char ch : played)
+        {
+            selector ^= ch;
+            selector *= 1099511628211ULL;
+        }
+        selector ^= 0xff;
+        selector *= 1099511628211ULL;
+    }
+
+    for (const auto& line : OpeningBook)
+    {
+        std::istringstream stream{std::string(line.moves)};
+        std::vector<std::string> sequence;
+        std::string move;
+        while (stream >> move)
+            sequence.push_back(move);
+
+        if (sequence.size() <= history.size())
+            continue;
+
+        bool matches = true;
+        for (std::size_t i = 0; i < history.size(); ++i)
+            if (sequence[i] != history[i])
+            {
+                matches = false;
+                break;
+            }
+
+        if (matches)
+            candidates[sequence[history.size()]] += line.weight;
+    }
+
+    unsigned totalWeight = 0;
+    for (const auto& [move, weight] : candidates)
+        totalWeight += weight;
+    if (!totalWeight)
+        return std::nullopt;
+
+    unsigned choice = unsigned(selector % totalWeight);
+    for (const auto& [move, weight] : candidates)
+    {
+        if (choice < weight)
+            return move;
+        choice -= weight;
+    }
+    return candidates.begin()->first;
+}
 
 template<typename... Ts>
 struct overload: Ts... {
@@ -242,7 +356,26 @@ void UCIEngine::go(std::istringstream& is) {
     if (limits.perft)
         perft(limits);
     else
+    {
+        const bool clockManaged = limits.time[WHITE] > 0 || limits.time[BLACK] > 0;
+        const bool normalClockSearch = clockManaged && !limits.depth && !limits.nodes
+                                    && !limits.movetime && !limits.infinite
+                                    && limits.searchmoves.empty();
+
+        // Book hits return immediately; analysis, fixed-depth tests, and restricted
+        // searchmoves always go through the searcher.
+        if (positionIsStartpos && engine.get_options()["Use Opening Book"]
+            && normalClockSearch)
+        {
+            if (const auto move = opening_book_move(positionMoves))
+            {
+                sync_cout << "bestmove " << *move << sync_endl;
+                return;
+            }
+        }
+
         engine.go(limits);
+    }
 }
 
 void UCIEngine::bench(std::istream& args) {
@@ -499,6 +632,7 @@ void UCIEngine::position(std::istringstream& is) {
     std::string token, fen;
 
     is >> token;
+    positionIsStartpos = token == "startpos";
 
     if (token == "startpos")
     {
@@ -523,6 +657,7 @@ void UCIEngine::position(std::istringstream& is) {
     {
         terminate_on_critical_error(err->what());
     }
+    positionMoves = std::move(moves);
 }
 
 namespace {
