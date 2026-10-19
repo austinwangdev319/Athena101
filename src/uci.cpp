@@ -360,8 +360,8 @@ void UCIEngine::go(std::istringstream& is) {
         const Color sideToMove = positionMoves.size() % 2 ? BLACK : WHITE;
         const bool clockManaged = limits.time[sideToMove] > 0;
         const bool normalClockSearch = clockManaged && !limits.depth && !limits.nodes
-                                    && !limits.movetime && !limits.infinite
-                                    && limits.searchmoves.empty();
+                                    && !limits.movetime && !limits.mate && !limits.infinite
+                                    && !limits.ponderMode && limits.searchmoves.empty();
 
         // Book hits return immediately; analysis, fixed-depth tests, and restricted
         // searchmoves always go through the searcher.
