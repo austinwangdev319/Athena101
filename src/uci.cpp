@@ -260,6 +260,66 @@ constexpr OpeningBookLine OpeningBook[] = {
     {"c2c4 c7c5 b1c3 b8c6 g2g3 g7g6 f1g2 f8g7 e2e4 e7e5", 6},
     // English Symmetrical Hedgehog setup
     {"c2c4 c7c5 g1f3 g8f6 b1c3 e7e6 g2g3 b7b6 f1g2 c8b7 e1g1 f8e7", 5},
+    // Sicilian Dragon Classical Variation
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 g7g6 f1e2 f8g7 "
+     "e1g1 e8g8", 8},
+    // Sicilian Dragon Levenfish Attack
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 g7g6 f2f4 f8g7 "
+     "e4e5", 5},
+    // Sicilian Scheveningen Keres Attack
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 e7e6 g2g4", 7},
+    // Sicilian Sveshnikov, main line
+    {"e2e4 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g8f6 b1c3 e7e5 d4b5 d7d6 "
+     "c1g5 a7a6 b5a3 b7b5 g5f6 g7f6 c3d5 f6f5", 8},
+    // Sicilian Najdorf Poisoned Pawn setup
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 a7a6 c1g5 e7e6 "
+     "f2f4 d8b6", 5},
+    // Sicilian Scheveningen English Attack
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 e7e6 c1e3 a7a6 "
+     "f2f3 b7b5 d1d2 b8d7 g2g4", 6},
+    // Sicilian O'Kelly Variation
+    {"e2e4 c7c5 g1f3 a7a6 d2d4 c5d4 f3d4", 4},
+    // Sicilian Wing Gambit, 5.Nf3 sideline
+    {"e2e4 c7c5 b2b4 c5b4 a2a3 d7d5 e4d5 d8d5 g1f3", 4},
+    // Italian Fried Liver Attack
+    {"e2e4 e7e5 g1f3 b8c6 f1c4 g8f6 f3g5 d7d5 e4d5 f6d5 g5f7 e8f7 "
+     "d1f3", 6},
+    // Traxler Counterattack
+    {"e2e4 e7e5 g1f3 b8c6 f1c4 g8f6 f3g5 f8c5", 5},
+    // Italian Max Lange Attack setup
+    {"e2e4 e7e5 g1f3 b8c6 f1c4 g8f6 d2d4 e5d4 e1g1 f8c5 e4e5", 4},
+    // Ruy Lopez Open Defense
+    {"e2e4 e7e5 g1f3 b8c6 f1b5 a7a6 b5a4 g8f6 e1g1 f6e4 d2d4 b7b5 "
+     "a4b3 d7d5", 6},
+    // Ruy Lopez Marshall Attack
+    {"e2e4 e7e5 g1f3 b8c6 f1b5 a7a6 b5a4 g8f6 e1g1 f8e7 f1e1 b7b5 "
+     "a4b3 e8g8 c2c3 d7d5 e4d5 f6d5 f3e5 c6e5 e1e5 c7c6", 6},
+    // Elephant Gambit
+    {"e2e4 e7e5 g1f3 d7d5 e4d5 f8d6", 4},
+    // Scandinavian Icelandic Gambit
+    {"e2e4 d7d5 e4d5 g8f6 c2c4 e7e6 d5e6 c8e6", 4},
+    // Queen's Gambit Exchange Variation
+    {"d2d4 d7d5 c2c4 e7e6 b1c3 g8f6 c4d5 e6d5 c1g5", 5},
+    // Slav Defense main line
+    {"d2d4 d7d5 c2c4 c7c6 b1c3 g8f6 g1f3 d5c4 e2e4", 6},
+    // Blackmar-Diemer Gambit
+    {"d2d4 d7d5 e2e4 d5e4 b1c3 g8f6 f2f3", 4},
+    // Albin Countergambit
+    {"d2d4 d7d5 c2c4 e7e5 d4e5 d5d4", 5},
+    // Benko Gambit accepted
+    {"d2d4 g8f6 c2c4 c7c5 d4d5 b7b5 c4b5 a7a6 b5a6 c8a6", 5},
+    // Nimzo-Indian Sämisch Variation
+    {"d2d4 g8f6 c2c4 e7e6 b1c3 f8b4 a2a3 b4c3 b2c3 c7c5 f2f3", 5},
+    // Nimzo-Indian Classical Variation
+    {"d2d4 g8f6 c2c4 e7e6 b1c3 f8b4 d1c2 e8g8 a2a3 b4c3 d1c3", 4},
+    // Colle System setup
+    {"d2d4 d7d5 g1f3 g8f6 e2e3 e7e6 f1d3 c7c5 b2b3", 4},
+    // Veresov Opening
+    {"d2d4 d7d5 b1c3 g8f6 c1g5", 4},
+    // Catalan Open Variation
+    {"d2d4 g8f6 c2c4 e7e6 g2g3 d7d5 f1g2 d5c4 g1f3", 5},
+    // King's Indian Four Pawns Attack
+    {"d2d4 g8f6 c2c4 g7g6 b1c3 f8g7 e2e4 d7d6 f2f4 e8g8 g1f3", 5},
 };
 
 std::optional<std::string> opening_book_move(const std::vector<std::string>& history) {
