@@ -105,6 +105,161 @@ constexpr OpeningBookLine OpeningBook[] = {
     {"e2e4 e7e5 g1f3 b8c6 b1c3 g8f6 d2d4 e5d4 f3d4", 5}, // Four Knights
     {"e2e4 e7e5 g1f3 b8c6 f1b5 a7a6 b5a4 g8f6 d2d3", 5},
     {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 a7a6 f1e2", 5},
+    // Sicilian Wing Gambit, accepted
+    {"e2e4 c7c5 b2b4 c5b4 a2a3 d7d5 e4d5 d8d5 a3b4", 6},
+    // Sicilian Smith-Morra Gambit, accepted
+    {"e2e4 c7c5 d2d4 c5d4 c2c3 d4c3 b1c3 b8c6 g1f3 d7d6 f1c4", 8},
+    // Sicilian Smith-Morra, development line
+    {"e2e4 c7c5 d2d4 c5d4 c2c3 d4c3 b1c3 b8c6 g1f3 e7e6", 5},
+    // Sicilian Smith-Morra, declined with Nf6
+    {"e2e4 c7c5 d2d4 c5d4 c2c3 g8f6", 4},
+    // Sicilian Alapin, 2...Nf6
+    {"e2e4 c7c5 c2c3 g8f6 e4e5 f6d5 d2d4 c5d4 c3d4 d7d6", 7},
+    // Sicilian Alapin, 2...d5
+    {"e2e4 c7c5 c2c3 d7d5 e4d5 d8d5 d2d4 g8f6 g1f3", 7},
+    // Sicilian Rossolimo, 3...g6
+    {"e2e4 c7c5 g1f3 b8c6 f1b5 g7g6 b5c6 d7c6", 8},
+    // Sicilian Rossolimo, 3...e6
+    {"e2e4 c7c5 g1f3 b8c6 f1b5 e7e6 b5c6 b7c6", 6},
+    // Sicilian Rossolimo, 3...Nf6
+    {"e2e4 c7c5 g1f3 b8c6 f1b5 g8f6 e4e5 f6d5", 5},
+    // Sicilian Moscow Variation
+    {"e2e4 c7c5 g1f3 d7d6 f1b5 c8d7 b5d7 d8d7 d2d4 c5d4 d1d4", 6},
+    // Sicilian Grand Prix Attack, fianchetto setup
+    {"e2e4 c7c5 b1c3 b8c6 f2f4 g7g6 g1f3 f8g7 f1b5", 6},
+    // Sicilian Grand Prix Attack, ...d6 and ...Nf6
+    {"e2e4 c7c5 b1c3 d7d6 f2f4 g8f6 g1f3", 5},
+    // Sicilian Dragon, Yugoslav Attack
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 g7g6 f2f3 f8g7 "
+     "c1e3 e8g8 d1d2 b8c6 e1c1", 10},
+    // Sicilian Dragon, 6.Be3 setup
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 g7g6 c1e3 f8g7", 7},
+    // Sicilian Najdorf, English Attack
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 a7a6 c1e3 e7e5 "
+     "d4b3 c8e6 f2f3", 9},
+    // Sicilian Najdorf, 6.Bg5
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 a7a6 c1g5 e7e6 "
+     "d1d2", 7},
+    // Sicilian Najdorf, Sozin setup
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 a7a6 f1c4 e7e6", 6},
+    // Sicilian Scheveningen, Classical setup
+    {"e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 e7e6 f1e2 a7a6 "
+     "e1g1 f8e7", 7},
+    // Sicilian Accelerated Dragon
+    {"e2e4 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g7g6 b1c3 f8g7", 8},
+    // Sicilian Accelerated Dragon, Maroczy Bind
+    {"e2e4 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g7g6 c2c4 f8g7 b1c3", 7},
+    // Sicilian Kalashnikov Variation
+    {"e2e4 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 e7e5 d4b5 d7d6", 7},
+    // Sicilian Taimanov, ...Qc7
+    {"e2e4 c7c5 g1f3 e7e6 d2d4 c5d4 f3d4 b8c6 b1c3 d8c7", 7},
+    // Sicilian Taimanov, ...Nf6
+    {"e2e4 c7c5 g1f3 e7e6 d2d4 c5d4 f3d4 b8c6 b1c3 g8f6", 6},
+    // Sicilian Kan, 5.Bd3
+    {"e2e4 c7c5 g1f3 e7e6 d2d4 c5d4 f3d4 a7a6 f1d3", 6},
+    // Sicilian Kan, 5.Bd3 and ...Nf6
+    {"e2e4 c7c5 g1f3 e7e6 d2d4 c5d4 f3d4 a7a6 f1d3 g8f6", 5},
+    // Sicilian Closed, kingside fianchetto
+    {"e2e4 c7c5 b1c3 b8c6 g2g3 g7g6 f1g2 f8g7 d2d3 d7d6 f2f4", 6},
+    // Sicilian Four Knights
+    {"e2e4 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g8f6 b1c3 e7e6", 6},
+    // Italian Evans Gambit, accepted
+    {"e2e4 e7e5 g1f3 b8c6 f1c4 f8c5 b2b4 c5b4 c2c3 b4a5 d2d4 e5d4 "
+     "e1g1", 7},
+    // Italian Two Knights Defense, Ng5 line
+    {"e2e4 e7e5 g1f3 b8c6 f1c4 g8f6 f3g5 d7d5 e4d5 c6a5", 7},
+    // Italian Giuoco Pianissimo
+    {"e2e4 e7e5 g1f3 b8c6 f1c4 f8c5 d2d3 g8f6 e1g1 d7d6", 8},
+    // Scotch Gambit
+    {"e2e4 e7e5 g1f3 b8c6 d2d4 e5d4 f1c4", 6},
+    // Goring Gambit, accepted
+    {"e2e4 e7e5 g1f3 b8c6 d2d4 e5d4 c2c3 d4c3 b1c3", 5},
+    // Ponziani Opening
+    {"e2e4 e7e5 g1f3 b8c6 c2c3 g8f6 d2d4 f6e4", 5},
+    // Philidor Defense, Hanham setup
+    {"e2e4 e7e5 g1f3 d7d6 d2d4 g8f6 b1c3 b8d7", 6},
+    // Danish Gambit, accepted
+    {"e2e4 e7e5 d2d4 e5d4 c2c3 d4c3 f1c4 c3b2 c1b2", 5},
+    // Vienna Gambit, ...d5
+    {"e2e4 e7e5 b1c3 g8f6 f2f4 d7d5", 5},
+    // King's Gambit, Falkbeer Countergambit
+    {"e2e4 e7e5 f2f4 d7d5 f4d5 e5e4", 5},
+    // Bishop's Opening, ...Nf6
+    {"e2e4 e7e5 f1c4 g8f6 d2d3 b8c6", 5},
+    // Ruy Lopez Exchange Variation
+    {"e2e4 e7e5 g1f3 b8c6 f1b5 a7a6 b5c6 d7c6", 7},
+    // Ruy Lopez Schliemann Defense
+    {"e2e4 e7e5 g1f3 b8c6 f1b5 f7f5 b1c3 f5e4 c3e4 d7d5", 5},
+    // French Classical Variation
+    {"e2e4 e7e6 d2d4 d7d5 b1c3 g8f6 e4e5 f6d7 f2f4 c7c5", 7},
+    // French Tarrasch Variation
+    {"e2e4 e7e6 d2d4 d7d5 b1d2 c7c5 c2c3 b8c6 g1f3", 7},
+    // French Rubinstein Variation
+    {"e2e4 e7e6 d2d4 d7d5 b1c3 d5e4 c3e4 b8d7", 6},
+    // French Winawer, advance line
+    {"e2e4 e7e6 d2d4 d7d5 b1c3 f8b4 e4e5 c7c5 a2a3 b4c3 b2c3", 6},
+    // French King's Indian Attack setup
+    {"e2e4 e7e6 d2d3 d7d5 b1d2 g8f6 g1f3", 5},
+    // Caro-Kann Classical Variation
+    {"e2e4 c7c6 d2d4 d7d5 b1c3 d5e4 c3e4 c8f5", 8},
+    // Caro-Kann Panov-Botvinnik Attack
+    {"e2e4 c7c6 d2d4 d7d5 e4d5 c6d5 c2c4 g8f6 b1c3", 7},
+    // Caro-Kann Fantasy Variation
+    {"e2e4 c7c6 d2d4 d7d5 f2f3 d5e4 f3e4", 5},
+    // Caro-Kann Two Knights Variation
+    {"e2e4 c7c6 b1c3 d7d5 g1f3 c8g4", 5},
+    // Caro-Kann Exchange Variation
+    {"e2e4 c7c6 d2d4 d7d5 e4d5 c6d5 f1d3 g8f6", 5},
+    // Pirc Austrian Attack
+    {"e2e4 d7d6 d2d4 g8f6 b1c3 g7g6 f2f4", 7},
+    // Pirc 150 Attack
+    {"e2e4 d7d6 d2d4 g8f6 b1c3 g7g6 c1e3 f8g7 d1d2 c7c6 f2f3", 6},
+    // Modern Defense, Austrian setup
+    {"e2e4 g7g6 d2d4 f8g7 b1c3 d7d6 f2f4 g8f6", 6},
+    // Scandinavian Defense, modern ...Nf6
+    {"e2e4 d7d5 e4d5 g8f6 d2d4 f6d5", 6},
+    // Scandinavian Portuguese Gambit setup
+    {"e2e4 d7d5 e4d5 g8f6 d2d4 c8g4 f2f3 g4f5", 5},
+    // Alekhine Defense, Four Pawns Attack
+    {"e2e4 g8f6 e4e5 f6d5 d2d4 d7d6 c2c4 d5b6 f2f4", 6},
+    // Alekhine Defense, Exchange Variation
+    {"e2e4 g8f6 e4e5 f6d5 d2d4 d7d6 c2c4 d5b6 e5d6 c7d6", 5},
+    // Nimzowitsch Defense, 2...d5
+    {"e2e4 b8c6 d2d4 d7d5 e4d5 d8d5 b1c3 d5a5", 5},
+    // Queen's Gambit Accepted
+    {"d2d4 d7d5 c2c4 d5c4 e2e3 g8f6 f1c4 e7e6 g1f3 c7c5", 7},
+    // Queen's Gambit Tarrasch Defense
+    {"d2d4 d7d5 c2c4 e7e6 b1c3 c7c5 c4d5 e6d5 g1f3 b8c6", 7},
+    // Semi-Slav Defense
+    {"d2d4 d7d5 c2c4 c7c6 g1f3 g8f6 b1c3 e7e6 e2e3", 7},
+    // Slav Exchange Variation
+    {"d2d4 d7d5 c2c4 c7c6 c4d5 c6d5 b1c3 g8f6", 6},
+    // Dutch Stonewall setup
+    {"d2d4 f7f5 c2c4 g8f6 b1c3 e7e6 g1f3 d7d5 e2e3 c7c6", 6},
+    // Budapest Gambit
+    {"d2d4 g8f6 c2c4 e7e5 d4e5 f6g4 g1f3 b8c6 c1f4 f8b4", 5},
+    // Trompowsky Attack
+    {"d2d4 g8f6 c1g5 f6e4 g5f4 c7c5", 5},
+    // Torre Attack
+    {"d2d4 g8f6 g1f3 e7e6 c1g5", 5},
+    // London System, ...c5 setup
+    {"d2d4 d7d5 c1f4 g8f6 e2e3 c7c5 c2c3 b8c6", 6},
+    // King's Indian, Classical main setup
+    {"d2d4 g8f6 c2c4 g7g6 b1c3 f8g7 e2e4 d7d6 g1f3 e8g8 f1e2 e7e5 "
+     "e1g1 b8c6 d4d5 c6e7", 7},
+    // King's Indian Sämisch Variation
+    {"d2d4 g8f6 c2c4 g7g6 b1c3 f8g7 e2e4 d7d6 f2f3 e8g8 c1e3 c7c5 "
+     "d4d5 e7e6", 6},
+    // Grünfeld Exchange Variation
+    {"d2d4 g8f6 c2c4 g7g6 b1c3 d7d5 c4d5 f6d5 e2e4 d5c3 b2c3 f8g7", 7},
+    // Catalan Closed setup
+    {"d2d4 g8f6 c2c4 e7e6 g2g3 d7d5 f1g2 f8e7 g1f3 e8g8 e1g1", 6},
+    // English Four Knights
+    {"c2c4 e7e5 b1c3 g8f6 g1f3 b8c6 g2g3 d7d5", 6},
+    // English Botvinnik System
+    {"c2c4 c7c5 b1c3 b8c6 g2g3 g7g6 f1g2 f8g7 e2e4 e7e5", 6},
+    // English Symmetrical Hedgehog setup
+    {"c2c4 c7c5 g1f3 g8f6 b1c3 e7e6 g2g3 b7b6 f1g2 c8b7 e1g1 f8e7", 5},
 };
 
 std::optional<std::string> opening_book_move(const std::vector<std::string>& history) {
