@@ -9,4 +9,4 @@ An ongoing experiment in chess AI, advanced pruning and time-depth tradeoff, and
 
 ## Source and licensing
 
-This repository includes third-party software. Preserve applicable source notices and license files. See `THIRD_PARTY_NOTICES.md`, `AUTHORS`, and `Copying.txt`.
+This repository includes third-party software. Preserve applicable source notices and license files. See `THIRD_PARTY_NOTICES.md` and `Copying.txt`.
