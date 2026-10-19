@@ -183,7 +183,7 @@ constexpr OpeningBookLine OpeningBook[] = {
     // Vienna Gambit, ...d5
     {"e2e4 e7e5 b1c3 g8f6 f2f4 d7d5", 5},
     // King's Gambit, Falkbeer Countergambit
-    {"e2e4 e7e5 f2f4 d7d5 f4d5 e5e4", 5},
+    {"e2e4 e7e5 f2f4 d7d5 e4d5 e5e4", 5},
     // Bishop's Opening, ...Nf6
     {"e2e4 e7e5 f1c4 g8f6 d2d3 b8c6", 5},
     // Ruy Lopez Exchange Variation
@@ -237,7 +237,7 @@ constexpr OpeningBookLine OpeningBook[] = {
     // Dutch Stonewall setup
     {"d2d4 f7f5 c2c4 g8f6 b1c3 e7e6 g1f3 d7d5 e2e3 c7c6", 6},
     // Budapest Gambit
-    {"d2d4 g8f6 c2c4 e7e5 d4e5 f6g4 g1f3 b8c6 c1f4 f8b4", 5},
+    {"d2d4 g8f6 c2c4 e7e5 d4e5 f6g4 g1f3 b8c6 c1f4 d7d6", 5},
     // Trompowsky Attack
     {"d2d4 g8f6 c1g5 f6e4 g5f4 c7c5", 5},
     // Torre Attack
@@ -525,8 +525,16 @@ void UCIEngine::go(std::istringstream& is) {
         {
             if (const auto move = opening_book_move(positionMoves))
             {
-                sync_cout << "bestmove " << *move << sync_endl;
-                return;
+                // Verify the selected move against the live board before returning
+                // it. This protects play if a future book edit contains a typo.
+                StateInfo bookState;
+                Position bookPosition;
+                if (!bookPosition.set(engine.fen(), false, &bookState).has_value()
+                    && to_move(bookPosition, *move) != Move::none())
+                {
+                    sync_cout << "bestmove " << *move << sync_endl;
+                    return;
+                }
             }
         }
 
