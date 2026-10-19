@@ -22,6 +22,7 @@
 #include <iostream>
 #include <string>
 #include <string_view>
+#include <vector>
 
 #include "engine.h"
 #include "misc.h"
@@ -59,6 +60,8 @@ class UCIEngine {
     Engine      engine;
     CommandLine cli;
     std::string currentCmd;
+    std::vector<std::string> positionMoves;
+    bool positionIsStartpos = false;
 
     static void print_info_string(std::string_view str);
 
