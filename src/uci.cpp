@@ -357,7 +357,8 @@ void UCIEngine::go(std::istringstream& is) {
         perft(limits);
     else
     {
-        const bool clockManaged = limits.time[WHITE] > 0 || limits.time[BLACK] > 0;
+        const Color sideToMove = positionMoves.size() % 2 ? BLACK : WHITE;
+        const bool clockManaged = limits.time[sideToMove] > 0;
         const bool normalClockSearch = clockManaged && !limits.depth && !limits.nodes
                                     && !limits.movetime && !limits.infinite
                                     && limits.searchmoves.empty();
