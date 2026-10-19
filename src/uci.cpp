@@ -366,7 +366,7 @@ void UCIEngine::go(std::istringstream& is) {
         // Book hits return immediately; analysis, fixed-depth tests, and restricted
         // searchmoves always go through the searcher.
         if (positionIsStartpos && engine.get_options()["Use Opening Book"]
-            && normalClockSearch)
+            && !engine.get_options()["UCI_Chess960"] && normalClockSearch)
         {
             if (const auto move = opening_book_move(positionMoves))
             {
