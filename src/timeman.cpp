@@ -162,19 +162,19 @@ void TimeManagement::init(Search::LimitsType& limits,
     const double incrementSeconds = double(limits.inc[us] / scaleFactor) / 1000.0;
 
     double clockPace = 1.0;
-    if (remainingSeconds < 2.0)
+    if (remainingSeconds <= 2.0)
         clockPace = 0.35;
-    else if (remainingSeconds < 5.0)
+    else if (remainingSeconds <= 5.0)
         clockPace = 0.45;
-    else if (remainingSeconds < 15.0)
+    else if (remainingSeconds <= 15.0)
         clockPace = 0.55;
-    else if (remainingSeconds < 45.0)
+    else if (remainingSeconds <= 45.0)
         clockPace = 0.65;
-    else if (remainingSeconds < 90.0)
+    else if (remainingSeconds <= 90.0)
         clockPace = 0.72;
-    else if (remainingSeconds < 180.0)
+    else if (remainingSeconds <= 180.0)
         clockPace = 0.80;
-    else if (remainingSeconds < 300.0)
+    else if (remainingSeconds <= 300.0)
         clockPace = 0.88;
 
     // Up to 30% more time for a healthy increment (e.g. 3+2 or 5+3).
