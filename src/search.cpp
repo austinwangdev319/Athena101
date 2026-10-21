@@ -171,6 +171,35 @@ bool is_shuffling(Move move, Stack* const ss, const Position& pos) {
         && (ss - 2)->currentMove.from_sq() == (ss - 4)->currentMove.to_sq();
 }
 
+// Detect a root move that allows the opponent to win our queen immediately.
+// This is deliberately limited to a legal, profitable queen capture in one ply;
+// it does not prohibit sound queen sacrifices with sufficient searched compensation.
+bool root_move_hangs_queen(Position& pos, Move move) {
+    if (!move.is_ok() || !pos.legal(move))
+        return false;
+
+    const Color us = pos.side_to_move();
+    StateInfo    nextState;
+    pos.do_move(move, nextState);
+
+    bool hangsQueen = false;
+    MoveList<CAPTURES> captures(pos);
+    for (Move reply : captures)
+    {
+        if (pos.piece_on(reply.to_sq()) != make_piece(us, QUEEN))
+            continue;
+
+        if (pos.legal(reply) && pos.see_ge(reply, QueenValue / 2))
+        {
+            hangsQueen = true;
+            break;
+        }
+    }
+
+    pos.undo_move(move);
+    return hangsQueen;
+}
+
 }  // namespace
 
 Search::Worker::Worker(SharedState&                   sharedState,
@@ -255,6 +284,48 @@ void Search::Worker::start_searching() {
 
     if (!limits.depth && !skill.enabled())
         bestThread = threads.get_best_thread()->worker.get();
+
+    // Tactical safety net for a searched root move that hangs the queen at once.
+    // Prefer the highest-scoring non-hanging alternative if it is still within
+    // two pawns of the engine's top score. Large score gaps remain untouched so
+    // a well-supported queen sacrifice or forced line is not automatically vetoed.
+    bool saferRootMoveSelected = false;
+    constexpr Value QueenHangAlternativeMargin = 400;
+    if (bestThread->rootMoves.size() > 1 && !bestThread->rootMoves[0].pv.empty()
+        && !is_decisive(bestThread->rootMoves[0].score)
+        && root_move_hangs_queen(rootPos, bestThread->rootMoves[0].pv[0]))
+    {
+        const Value bestScore = bestThread->rootMoves[0].score;
+        usize       saferIdx  = bestThread->rootMoves.size();
+        Value       saferScore = -VALUE_INFINITE;
+
+        for (usize i = 1; i < bestThread->rootMoves.size(); ++i)
+        {
+            const auto& candidate = bestThread->rootMoves[i];
+            if (candidate.pv.empty() || candidate.score < bestScore - QueenHangAlternativeMargin)
+                continue;
+
+            if (root_move_hangs_queen(rootPos, candidate.pv[0]))
+                continue;
+
+            if (saferIdx == bestThread->rootMoves.size() || candidate.score > saferScore)
+            {
+                saferIdx   = i;
+                saferScore = candidate.score;
+            }
+        }
+
+        if (saferIdx != bestThread->rootMoves.size())
+        {
+            std::rotate(bestThread->rootMoves.begin(),
+                        bestThread->rootMoves.begin() + saferIdx,
+                        bestThread->rootMoves.begin() + saferIdx + 1);
+            saferRootMoveSelected = true;
+        }
+    }
+
+    if (saferRootMoveSelected)
+        uciPvSent = false;
 
     main_manager()->bestPreviousScore        = bestThread->rootMoves[0].score;
     main_manager()->bestPreviousAverageScore = bestThread->rootMoves[0].averageScore;
