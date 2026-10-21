@@ -647,6 +647,21 @@ void UCIEngine::go(std::istringstream& is) {
             }
         }
 
+        // An opening-book miss should not trigger a full clock-managed search in
+        // the first few moves. The option is a hard ceiling for these fallback
+        // searches; book hits above still return immediately.
+        constexpr std::size_t OpeningPhasePlyLimit = 8;
+        if (normalClockSearch && positionIsStartpos
+            && positionMoves.size() < OpeningPhasePlyLimit)
+        {
+            limits.movetime =
+              TimePoint(int(engine.get_options()["Opening Phase Move Time"]));
+            print_info_string(
+              "Opening-book miss: limiting fallback search to "
+              + std::to_string(int(engine.get_options()["Opening Phase Move Time"]))
+              + " ms.");
+        }
+
         engine.go(limits);
     }
 }
