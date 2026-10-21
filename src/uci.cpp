@@ -54,13 +54,17 @@ constexpr auto BenchmarkCommand = "speedtest";
 struct OpeningBookLine {
     std::string_view moves;
     unsigned         weight;
+    // Optional side-specific weighting lets Athena favor restrictive plans
+    // without making the same repertoire artificially more attractive for both sides.
+    unsigned         whiteWeight = 0;
+    unsigned         blackWeight = 0;
 };
 
 // Compact, weighted mainstream opening repertoire in UCI coordinate notation.
 // The book is consulted only from the standard initial position and only for
 // clock-managed games; fixed-depth/bench analysis always uses the search.
 constexpr OpeningBookLine OpeningBook[] = {
-    {"e2e4 e7e5 g1f3 b8c6 f1b5 a7a6 b5a4 g8f6 e1g1 f8e7", 12}, // Ruy Lopez
+    {"e2e4 e7e5 g1f3 b8c6 f1b5 a7a6 b5a4 g8f6 e1g1 f8e7", 12, 18, 12}, // Ruy Lopez: White constrains development
     {"e2e4 e7e5 g1f3 b8c6 f1b5 g8f6 e1g1 f6e4", 5},          // Berlin
     {"e2e4 e7e5 g1f3 b8c6 f1c4 f8c5 c2c3 g8f6 d2d4 e5d4 c3d4", 10}, // Italian
     {"e2e4 e7e5 g1f3 b8c6 f1c4 g8f6 d2d3 f8c5 c2c3 d7d6", 7},
@@ -75,7 +79,7 @@ constexpr OpeningBookLine OpeningBook[] = {
     {"e2e4 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g8f6 b1c3 d7d6", 7}, // Classical Sicilian
     {"e2e4 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g8f6 b1c3 e7e5", 7}, // Sveshnikov
     {"e2e4 c7c5 b1c3 b8c6 g2g3 g7g6 f1g2 f8g7 d2d3 d7d6", 5}, // Closed Sicilian
-    {"e2e4 e7e6 d2d4 d7d5 e4e5 c7c5 c2c3 b8c6 g1f3", 9},    // French Advance
+    {"e2e4 e7e6 d2d4 d7d5 e4e5 c7c5 c2c3 b8c6 g1f3", 9, 18, 9},    // French Advance: White gains space and restricts Black's light-squared bishop
     {"e2e4 e7e6 d2d4 d7d5 b1c3 f8b4 e4e5 c7c5", 6},        // French Winawer
     {"e2e4 e7e6 d2d4 d7d5 e4d5 e6d5 b1c3 g8f6", 5},       // French Exchange
     {"e2e4 c7c6 d2d4 d7d5 b1c3 d5e4 c3e4 c8f5 g1f3", 10}, // Caro-Kann
@@ -87,7 +91,7 @@ constexpr OpeningBookLine OpeningBook[] = {
     {"e2e4 b8c6 d2d4 d7d5 e4e5 c8f5", 5},                // Nimzowitsch Defence
     {"d2d4 d7d5 c2c4 e7e6 b1c3 g8f6 g1f3 f8e7 e2e3 e8g8", 10}, // Queen's Gambit Declined
     {"d2d4 d7d5 c2c4 c7c6 g1f3 g8f6 b1c3 d5c4", 8},     // Slav
-    {"d2d4 g8f6 c2c4 e7e6 b1c3 f8b4 e2e3 e8g8 f1d3 d7d5", 8}, // Nimzo-Indian
+    {"d2d4 g8f6 c2c4 e7e6 b1c3 f8b4 e2e3 e8g8 f1d3 d7d5", 8, 8, 18}, // Nimzo-Indian: Black pins Nc3 and restrains e4
     {"d2d4 g8f6 c2c4 e7e6 g1f3 b7b6 g2g3 c8b7 f1g2 f8e7 e1g1", 7}, // Queen's Indian
     {"d2d4 g8f6 c2c4 g7g6 b1c3 f8g7 e2e4 d7d6 g1f3 e8g8 f1e2 e7e5", 10}, // King's Indian
     {"d2d4 g8f6 c2c4 g7g6 b1c3 d7d5 c4d5 f6d5 e2e4 d5c3 b2c3 f8g7", 8}, // Grünfeld
@@ -148,7 +152,7 @@ constexpr OpeningBookLine OpeningBook[] = {
     // Sicilian Accelerated Dragon
     {"e2e4 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g7g6 b1c3 f8g7", 8},
     // Sicilian Accelerated Dragon, Maroczy Bind
-    {"e2e4 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g7g6 c2c4 f8g7 b1c3", 7},
+    {"e2e4 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g7g6 c2c4 f8g7 b1c3", 7, 18, 7},
     // Sicilian Kalashnikov Variation
     {"e2e4 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 e7e5 d4b5 d7d6", 7},
     // Sicilian Taimanov, ...Qc7
@@ -359,7 +363,14 @@ std::optional<std::string> opening_book_move(const std::vector<std::string>& his
             }
 
         if (matches)
-            candidates[sequence[history.size()]] += line.weight;
+        {
+            const Color sideToMove = history.size() % 2 ? BLACK : WHITE;
+            const unsigned weight =
+              sideToMove == WHITE && line.whiteWeight ? line.whiteWeight
+              : sideToMove == BLACK && line.blackWeight ? line.blackWeight
+                                                        : line.weight;
+            candidates[sequence[history.size()]] += weight;
+        }
     }
 
     unsigned totalWeight = 0;
@@ -376,6 +387,35 @@ std::optional<std::string> opening_book_move(const std::vector<std::string>& his
         choice -= weight;
     }
     return candidates.begin()->first;
+}
+
+// A legal book move can still be a tactical blunder. In particular, do not
+// instantly play a stored move if the opponent can win our queen immediately.
+// Such a candidate is handed back to the normal search for an informed decision.
+bool book_move_hangs_queen(Position& position, Move move) {
+    if (!move.is_ok() || !position.legal(move))
+        return false;
+
+    const Color us = position.side_to_move();
+    StateInfo    nextState;
+    position.do_move(move, nextState);
+
+    bool hangsQueen = false;
+    MoveList<CAPTURES> captures(position);
+    for (Move reply : captures)
+    {
+        if (position.piece_on(reply.to_sq()) != make_piece(us, QUEEN))
+            continue;
+
+        if (position.legal(reply) && position.see_ge(reply, QueenValue / 2))
+        {
+            hangsQueen = true;
+            break;
+        }
+    }
+
+    position.undo_move(move);
+    return hangsQueen;
 }
 
 template<typename... Ts>
@@ -589,11 +629,20 @@ void UCIEngine::go(std::istringstream& is) {
                 // it. This protects play if a future book edit contains a typo.
                 StateInfo bookState;
                 Position bookPosition;
-                if (!bookPosition.set(engine.fen(), false, &bookState).has_value()
-                    && to_move(bookPosition, *move) != Move::none())
+                if (!bookPosition.set(engine.fen(), false, &bookState).has_value())
                 {
-                    sync_cout << "bestmove " << *move << sync_endl;
-                    return;
+                    const Move bookMove = to_move(bookPosition, *move);
+                    if (bookMove != Move::none() && bookPosition.legal(bookMove))
+                    {
+                        if (book_move_hangs_queen(bookPosition, bookMove))
+                            print_info_string(
+                              "Opening-book move skipped: it allows a favorable immediate queen capture; falling back to search.");
+                        else
+                        {
+                            sync_cout << "bestmove " << *move << sync_endl;
+                            return;
+                        }
+                    }
                 }
             }
         }
