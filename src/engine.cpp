@@ -104,6 +104,9 @@ Engine::Engine(std::optional<std::filesystem::path> path) :
     // The UCI layer uses this option to return matching book moves immediately.
     options.add("Use Opening Book", Option(true));
 
+    // Upper bound on search time when an early opening-book continuation is unavailable.
+    options.add("Opening Phase Move Time", Option(1500, 250, 5000));
+
     options.add(  //
       "MultiPV", Option(1, 1, MAX_MOVES));
 
